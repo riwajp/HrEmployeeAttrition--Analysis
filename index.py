@@ -8,55 +8,56 @@ data = pd.read_csv("WA_Fn-UseC_-HR-Employee-Attrition.csv")
 
 
 def attrition_by_gender():
-    dsf = {'gender': ['Female', 'Male']}
+    dsf = {"gender": ["Female", "Male"]}
     percents = [0, 0]
-    grp_by_gender = data.groupby('Gender')
+    grp_by_gender = data.groupby("Gender")
+    print("Attrition by Gender")
     for gender in grp_by_gender.groups:
-        print(gender)
-        left = grp_by_gender.get_group(
-            gender)['Attrition'].value_counts()['Yes']
-        total = len(grp_by_gender.get_group(gender)['Attrition'])
-        left_percent = left/total * 100
-        if gender == 'Male':
+
+        left = grp_by_gender.get_group(gender)["Attrition"].value_counts()["Yes"]
+        total = len(grp_by_gender.get_group(gender)["Attrition"])
+        left_percent = left / total * 100
+        if gender == "Male":
             percents[1] = left_percent
         else:
             percents[0] = left_percent
-        dsf['left_percent'] = percents
-    sns.barplot(x="gender", y='left_percent', data=dsf)
+        dsf["left_percent"] = percents
+    plt.ylabel("Attrition Percentage")
+    sns.barplot(x="gender", y="left_percent", data=dsf)
     plt.show()
 
 
-# attrition_by_gender()
+attrition_by_gender()
 # male little more likely to leave
 
 
 def attrition_by_x(x):
+    print("Attrition by " + x)
     grp_by_x = data.groupby(x)
     df = {}
     years_list = []
     attrition_rate = []
     genders = []
     for years, items in grp_by_x:
-        grp_by_gender = items.groupby('Gender')
+        grp_by_gender = items.groupby("Gender")
         for gender, items in grp_by_gender:
             years_list.append(years)
 
             genders.append(gender)
 
             try:
-                left = items['Attrition'].value_counts()['Yes']
+                left = items["Attrition"].value_counts()["Yes"]
             except:
                 left = 0
-            total = len(items['Attrition'])
-            percent = left/total * 100
+            total = len(items["Attrition"])
+            percent = left / total * 100
             attrition_rate.append(percent)
-    df['years'] = years_list
-    df['attrition_rate'] = attrition_rate
-    df['gender'] = genders
-    print(df)
+    df["years"] = years_list
+    df["attrition_rate"] = attrition_rate
+    df["gender"] = genders
 
-    sns.lineplot(x="years", y='attrition_rate', data=df, hue='gender')
+    sns.lineplot(x="years", y="attrition_rate", data=df, hue="gender")
     plt.show()
 
 
-# attrition_by_x('TotalWorkingYears')
+attrition_by_x("TotalWorkingYears")
